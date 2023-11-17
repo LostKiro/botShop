@@ -11,7 +11,7 @@ from sqlalchemy.orm import sessionmaker
 
 
 # Настройки бота
-API_TOKEN = '6540750435:AAEesraobBD6gXLuEWs__JStmpc67WhyU7g'
+API_TOKEN = 'ENTER TOKEN'
 
 # Настройки базы данных
 DATABASE_URL = 'sqlite:///store.db'
