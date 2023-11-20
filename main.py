@@ -4,11 +4,14 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Command
 from aiogram.dispatcher.filters.state import State, StatesGroup
+from aiogram.types import InputFile
 from aiogram.utils import executor
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-
+from PIL import Image, ImageFont, ImageDraw
+import time
+sample = Image.open('r1.png')
 
 # Настройки бота
 API_TOKEN = '6540750435:AAEesraobBD6gXLuEWs__JStmpc67WhyU7g'
@@ -58,6 +61,41 @@ async def cmd_start(message: types.Message):
 
     # Установка состояния selecting_product
     await ShopStates.selecting_product.set()
+
+@dp.message_handler(text='фото')
+async def cmd_start(message: types.Message):
+        await message.answer_photo(photo='mO9npDkSYs0.jpg', caption='фото с компа')
+
+# @dp.message_handler(content_types=['photo'])
+# async def handle_docs_photo(message):
+#     await message.photo[-1].download('r1.png')
+#     time.sleep(1)
+#     sample = Image.open('r1.png')
+#     cord = (10, 10, 640, 340)  # лево, верх, право, низ
+#     new_picture = sample.crop(cord)
+#     new_picture.show()
+
+@dp.message_handler(content_types=['photo'])
+async def handle_docs_photo(message: types.Message):
+    await message.photo[-1].download('r1.png')
+    time.sleep(1)
+    sample = Image.open('r1.png')
+    font = ImageFont.truetype('Minecraft.otf', size=20, encoding='ASCII')
+    draw = ImageDraw.Draw(sample)
+    draw.text((0, 0), font=font, text="Hello world", align="center", fill='blue')
+    sample.save('r3.png')
+    sample1 = Image.open('r1.png')
+    font1 = ImageFont.truetype('tahoma.ttf', size=20, encoding='ASCII')
+    draw1 = ImageDraw.Draw(sample1)
+    draw1.text((0, 0), font=font1, text="Hello world", align="center", fill='red')
+    sample1.save('r2.png')
+    await message.answer_photo(InputFile('r3.png'))
+    await message.answer_photo(InputFile('r2.png'))
+
+# уменьшил размер изображения в два раза
+    resized_image = sample.resize((262, 372))
+    resized_image.save('resized_r1.png')
+    await message.answer_photo(InputFile('resized_r1.png'))
 
 # Обработчик выбора товара
 @dp.message_handler(state=ShopStates.selecting_product)
